@@ -1,0 +1,22 @@
+{
+    "name": "huangman/composer",
+    "description": "学习",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "huangman",
+            "email": "411422925@qq.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "files": [
+            "src/core/helpers.php"
+        ],
+        "psr-4": {
+            "hd\\composer\\": "src",
+            "hd\\config\\": "config"
+        }
+    }
+}
