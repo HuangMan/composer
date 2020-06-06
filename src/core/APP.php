@@ -4,7 +4,7 @@ namespace hd\composer\core;
 
 use ReflectionClass;
 
-class APP
+class APP extends Container
 {
     // 不立即注册的集合
     protected $deferServices = [];
@@ -72,9 +72,9 @@ class APP
     {
         // 判断传入的参数是否是一个对象,如果是这返回对象的类
         $class = is_object($provider) ? get_class($provider) : $provider;
-        foreach ($this->serversProviders as $class) {
+        foreach ($this->serversProviders as $provider) {
             // 判断instance对象是否是provider类实例出来的
-            if ($instance instanceof $provider) {
+            if ($provider instanceof $class) {
                 return true;
             }
         }
