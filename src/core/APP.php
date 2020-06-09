@@ -19,14 +19,23 @@ class APP extends Container
         $this->bindProvider();
         //   启动服务
         $this->boot();
-
     }
-    protected function boot(){
+    protected function boot()
+    {
         //   循环需要注册的服务的集合
         foreach ($this->serversProviders as  $value) {
             //   调用服务中的启动方法
             $value->boot();
         }
+    }
+
+    public function make($name,$force){
+        if (isset($this->deferServices[$name])) {
+       
+            $this->register($this->deferServices[$name]);
+        }
+
+        return parent::make($name);
     }
 
     protected function bindProvider()
@@ -35,7 +44,7 @@ class APP extends Container
         $config = include BASE_PATH . "/config/app.php";
         //   循环获取配置加载的服务
         foreach ($config["providers"] as $provider) {
-            // dd($provider);
+            // dump($provider);
             //  通过反射类获得服务类的镜像
             $reflection = new ReflectionClass($provider);
             // 获得类的默认属性
@@ -45,7 +54,8 @@ class APP extends Container
                 // 获取不用立即注册的服务的短名
                 $alisa = substr($reflection->getShortName(), 0, -8);
                 // 将未立即注册的服务添加到不用立即注册集合，并以短名作为索引
-                $deferServices[$alisa] = $provider;
+                $this->deferServices[$alisa] = $provider;
+                // dump($this->deferServices);
             } else {
                 // 立即注册采取的行动
                 $this->register($provider);
@@ -67,15 +77,16 @@ class APP extends Container
         $object->register($this);
         // 将注册的服务添加的需要立即注册的数组中
         $this->serversProviders[] = $object;
+        // dd($this->serversProviders);
     }
     protected function getProvider($provider)
     {
         // 判断传入的参数是否是一个对象,如果是这返回对象的类
         $class = is_object($provider) ? get_class($provider) : $provider;
-        foreach ($this->serversProviders as $provider) {
+        foreach ($this->serversProviders as $instance) {
             // 判断instance对象是否是provider类实例出来的
-            if ($provider instanceof $class) {
-                return true;
+            if ($instance instanceof $class) {
+                return $instance;
             }
         }
     }
