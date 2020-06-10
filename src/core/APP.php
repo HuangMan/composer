@@ -28,13 +28,14 @@ class APP extends Container
             $value->boot();
         }
     }
-
+      
     public function make($name,$force){
+        // 判读服务是否延迟注册
         if (isset($this->deferServices[$name])) {
-       
+        //    延迟注册的，用register方法注册使用
             $this->register($this->deferServices[$name]);
         }
-
+        // 不是延迟注册的服务调用父类的make方法使用
         return parent::make($name);
     }
 

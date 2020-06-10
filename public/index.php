@@ -9,9 +9,6 @@ use hd\composer\core\APP;
 
  $app->bootstrap();
 
- $db = $app->make("Database");
+ $db = $app->make("Database",false);
 $db->host = "192.168.10.10";
-
-$db2 = $app->make('Database');
-dd($db2->host); 
  
